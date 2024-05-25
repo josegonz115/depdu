@@ -42,8 +42,8 @@ function Benefits() {
                 We saw the need for finding the right
                     pill for you.
                 </Text>
-                <Button borderRadius='30px' color='black' backgroundColor='white' width='90px'>
-                    Hi 
+                <Button borderRadius='30px' color='black' backgroundColor='white' width='100px'>
+                    Get Started! 
                 </Button>
             </VStack>   
         </HStack>
