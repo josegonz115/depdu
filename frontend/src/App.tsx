@@ -7,6 +7,7 @@ import {
   // Link,
 } from "react-router-dom";
 import LandingPage from './routes/LandingPage';
+import Chat from './routes/ChatbotPage';
 
 function App() {
   const router = createBrowserRouter([
@@ -16,13 +17,17 @@ function App() {
         <LandingPage />
       ),
     },
-    // {
-    //   path: "/about",
-    //   element: <div>About</div>,
-    // },
+    {
+      path: "/chat",
+      element: (
+        <Chat />
+      ),
+    },
   ]);
   return (
-    <RouterProvider router={router} />
+    <main className='App'>
+        <RouterProvider router={router} />
+    </main>
   )
 }
 
