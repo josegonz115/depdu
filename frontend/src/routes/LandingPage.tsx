@@ -3,6 +3,7 @@ import { Box, VStack } from "@chakra-ui/react";
 import Intro from '../components/Intro';
 import Benefits from '../components/Benefits';
 import ContactForm from '../components/ContactForm';
+import Footer from '../components/Footer';
 
 function LandingPage() {
   return (
@@ -16,6 +17,7 @@ function LandingPage() {
       <Box>
         <ContactForm/>
       </Box>
+      <Footer/>
     </VStack>
   );
 }
