@@ -7,7 +7,7 @@ import {
   // Link,
 } from "react-router-dom";
 import LandingPage from './routes/LandingPage';
-
+import QuestionareParser from './routes/QuestionareParser';
 function App() {
   const router = createBrowserRouter([
     {
@@ -15,6 +15,13 @@ function App() {
       element: (
         <LandingPage />
       ),
+    },
+    {
+      path: '/questionare',
+      element: (
+        <QuestionareParser/>
+      ),
+
     },
     // {
     //   path: "/about",
