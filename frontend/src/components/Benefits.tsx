@@ -4,11 +4,11 @@ import personalization from '../images/personalization.png';
 import research from '../images/research.png';
 import help from '../images/help.png';
 import efficiency from '../images/efficiency.png';
-import sapiens from '../images/sapiens.png'
+import sapiens from '../images/sapiens.png';
 
 function Benefits() {
   return (
-    <Flex justifyContent="center" alignItems="center" backgroundColor="pink" minHeight="100vh">
+    <Flex justifyContent="center" alignItems="center" backgroundColor="pink">
       <Box textAlign="start">
         <Text fontSize="50px" mb="20px" fontWeight='bold' color='black' pl='70px'>Discover the benefits</Text>
         

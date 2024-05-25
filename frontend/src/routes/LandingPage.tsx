@@ -5,11 +5,11 @@ import Benefits from '../components/Benefits';
 
 function LandingPage() {
   return (
-    <VStack spacing={0} width="100%">
-      <Box width="100%" height="100vh">
+    <VStack spacing={0}>
+      <Box>
         <Intro/>
       </Box>
-      <Box width="100%" mt="20px">
+      <Box mt="20px">
         <Benefits/>
       </Box>
     </VStack>

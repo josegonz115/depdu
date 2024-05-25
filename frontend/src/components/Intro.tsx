@@ -15,7 +15,7 @@ function YellowCircleBackground() {
     >
       <Box
         position="absolute"
-        top="-1050px"
+        top="0px" // Adjusted from -1050px
         left="50%"
         transform="translateX(-50%)"
         width="2150px"
@@ -27,7 +27,7 @@ function YellowCircleBackground() {
       />
       <Box
         position="absolute"
-        top="-880px"
+        top="0px" // Adjusted from -880px
         left="50%"
         transform="translateX(-50%)"
         width="2150px"
@@ -45,9 +45,7 @@ function Intro() {
   return (
     <Flex position="relative" justifyContent="center" alignItems="center" minHeight="100vh">
       <Box pt="100px" textAlign="center">
-        <Flex 
-          width="270px" 
-          height="38px" 
+        <Flex  
           backgroundColor="#C8C8C8" 
           opacity="40%"
           borderRadius="30px"  
