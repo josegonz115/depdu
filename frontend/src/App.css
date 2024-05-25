@@ -1,17 +1,17 @@
-#root {
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   text-align: center;
 }
-html,
+html, */
 /* body {
   max-width: 100vw;
   overflow-x: hidden;
 } */
-body {
+  body {
   height: 100vh;
   width: 100vw;
-}
+  }
 
 body {
   /* margin: 0; */
