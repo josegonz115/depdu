@@ -52,6 +52,7 @@ function Intro() {
           mb="10px"
           alignItems="center"
           justifyContent="center"
+          width='241px'
         > 
           <Text fontWeight="bold" color="#6100A2">Our Story</Text>
         </Flex>

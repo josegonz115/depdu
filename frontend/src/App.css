@@ -13,16 +13,6 @@ html, */
   width: 100vw;
   }
 
-body {
-  /* margin: 0; */
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column; 
-  justify-content: space-between;
-  place-items: center; 
-  /* min-width: 320px; */
-  min-height: 100vh;
-}
 
 .App{
   height: 100%;
