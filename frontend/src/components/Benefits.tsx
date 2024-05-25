@@ -8,44 +8,39 @@ import sapiens from '../images/sapiens.png';
 
 function Benefits() {
   return (
-    <Flex justifyContent="center" alignItems="center" backgroundColor="pink">
-      <Box textAlign="start">
-        <Text fontSize="50px" mb="20px" fontWeight='bold' color='black' pl='70px'>Discover the benefits</Text>
+    <Flex justifyContent="center" alignItems="center" backgroundColor="pink" width="100vw" py="40px">
+      <Box textAlign="start" width="80%">
+        <Text fontSize="50px" mb="40px" fontWeight="bold" color="black" textAlign="center">
+          Discover the benefits
+        </Text>
         
-        <HStack spacing="40px" justifyContent="center" mb="20px">
-            <Box textAlign="center" width='289px' height='100px'>
-                <Image src={personalization} width="100px" height="100px" mb="10px"/>
-                <Text color='black'>Personalized</Text>
-            </Box>
-            <Box textAlign="center" width='289px' height='100px'>
-                <Image src={research} width="100px" height="100px" mb="10px"/>
-                <Text color='black'>Research Driven</Text>
-            </Box>
-            <Box textAlign="center" width='289px' height='100px'>
-                <Image src={efficiency} width="100px" height="100px" mb="10px"/>
-                <Text color='black'>Efficient</Text>
-            </Box>
-            <Box textAlign="center" width='289px' height='100px'>
-                <Image src={help} width="100px" height="100px" mb="10px"/>
-                <Text color='black'>Helpful</Text>
-            </Box>
+        <HStack spacing="40px" justifyContent="space-between" mb="60px">
+          {[
+            { src: personalization, text: "Personalized" },
+            { src: research, text: "Research Driven" },
+            { src: efficiency, text: "Efficient" },
+            { src: help, text: "Helpful" }
+          ].map((item, index) => (
+            <VStack key={index} textAlign="center" width="200px" alignItems="center">
+              <Image src={item.src} boxSize="80px" mb="10px" />
+              <Text color="black">{item.text}</Text>
+            </VStack>
+          ))}
         </HStack>
 
-        <HStack>
-            <Image src = {sapiens} width='566px' height='500px'/>
-            <VStack m='0px'>
-                <Text fontSize="50px" fontWeight="bold" width='589px' height='219px' textAlign='left'
-                color='black'>
-                We saw the need for finding the right pill for you.
-                </Text>
-                <Text fontSize='30px' color='black' width='589px' height='219px' textAlign='left'> 
-                We saw the need for finding the right
-                    pill for you.
-                </Text>
-                <Button borderRadius='30px' color='black' backgroundColor='white' width='100px'>
-                    Get Started! 
-                </Button>
-            </VStack>   
+        <HStack spacing="40px" alignItems="flex-start">
+          <Image src={sapiens} boxSize="400px" objectFit="cover" />
+          <VStack align="start" spacing="20px">
+            <Text fontSize="36px" fontWeight="bold" color="black">
+              We saw the need for finding the right pill for you.
+            </Text>
+            <Text fontSize="24px" color="black">
+              We saw the need for finding the right pill for you.
+            </Text>
+            <Button borderRadius="30px" color="black" backgroundColor="white" width="150px">
+              Get Started!
+            </Button>
+          </VStack>
         </HStack>
       </Box>
     </Flex>
