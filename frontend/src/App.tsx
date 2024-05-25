@@ -7,7 +7,8 @@ import {
   // Link,
 } from "react-router-dom";
 import LandingPage from './routes/LandingPage';
-import Chat from './routes/ChatbotPage';
+//import Chat from './routes/ChatbotPage';
+import Maps from './components/Maps';
 
 function App() {
   const router = createBrowserRouter([
@@ -17,10 +18,16 @@ function App() {
         <LandingPage />
       ),
     },
+    // {
+    //   path: "/chat",
+    //   element: (
+    //     <Chat />
+    //   ),
+    // },
     {
-      path: "/chat",
+      path: "/maps",
       element: (
-        <Chat />
+        <Maps/>
       ),
     },
   ]);
