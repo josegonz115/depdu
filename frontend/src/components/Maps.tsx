@@ -163,7 +163,6 @@ const FindNearbyClinics = (props: any) => {
         const location = place.geometry.location;
         const lat = location.lat();
         const lng = location.lng();
-        console.log("pplace", place)
         const sendPlaceInfo = {
           name: place.name,
           opening_hours: place.opening_hours.weekday_text[getCurrentDayIndex()],
