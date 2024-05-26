@@ -1,4 +1,4 @@
-import { ErrorAsyncFunction } from "../types/types";
+import { ErrorAsyncFunction } from "../types/types.js";
 
 const errorMiddleware: ErrorAsyncFunction = (err:any, req, res, next) => {
     const errorObject = {
