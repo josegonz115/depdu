@@ -26,7 +26,7 @@ import logo from '../images/logo.png';
 
 
 
-const Links:[string, string][] = [['/', 'Home'], ['/chat', 'Chat'], ['/maps', 'Near me']];
+const Links:[string, string][] = [['/', 'Home'], ['/chat', 'Chat'], ['/maps', 'Maps']];
 
 const NavLink = ({ children, addy }: { children: ReactNode, addy:string }) => (
   <ChakraLink

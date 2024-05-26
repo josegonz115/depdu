@@ -9,7 +9,9 @@
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm i && cd backend && npm i && cd ../frontend && npm i",
+    "prestart": "cd ./backend && tsc",
+    "start": "cd ./backend && node index.js"
   },
   "keywords": [],
   "author": "",
