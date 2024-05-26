@@ -71,6 +71,8 @@ app.use(express.json());
 app.use("/api/ai", aiRoutes);
 app.use(errorMiddleware);
 
+
+__dirname = path.resolve(); 
 if (process.env.NODE_ENV === 'production'){
     // set static folder
     app.use(express.static(path.join(__dirname, '/frontend/dist')));
