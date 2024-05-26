@@ -30,7 +30,9 @@ Google Maps Integration: Find the nearest birth control clinics and Planned Pare
 
 ## Authors
 Valerie Huynh
+
 Jose Gonzalez
+
 Alvis Yong
 
 ## Version
