@@ -6,6 +6,8 @@ import errorMiddleware from "./middleware/errorMiddleware.js";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import {appendResponses, startResponse} from './langchain/langchain.js';
+import path from 'path';
+
 
 export interface THistory {
     text: string;
@@ -68,6 +70,21 @@ app.use(express.json());
 
 app.use("/api/ai", aiRoutes);
 app.use(errorMiddleware);
+
+if (process.env.NODE_ENV === 'production'){
+    // set static folder
+    app.use(express.static(path.join(__dirname, '/frontend/dist')));
+    // any route not api will be redirected to index.html
+    app.get('*', (_req, res) => 
+        res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'))
+    )
+}else{
+    app.get('/', (req, res) => {
+        res.send('API is running...');
+    });
+}
+
+
 
 const server = app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
