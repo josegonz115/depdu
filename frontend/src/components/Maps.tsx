@@ -4,20 +4,19 @@ import duckImage from '../assets/duck.webp';
 
 const PlacesNearYou = (props: any) => {
   const { placeInfo } = props;
+  const [ infoAvaliable, setInfoAvaliable ] = useState(false);
   useEffect(()=> {
     if (!placeInfo) return;
-    console.log("PLACE INFO", placeInfo);
+    setInfoAvaliable(true);
   }, [placeInfo])
-  let placeInfoList = [] // list of objects with each object having attr: name, distance, city, isOpen, hours, onClick,
-  const numArray = [1,2,3,4,5];
   return (
     <>
-    {numArray.map((item, index)=> (
+    {infoAvaliable && placeInfo.map((item, index)=> (
       <div key={index} className="flex flex-row ">
-        <p className="text-3xl md:p-8 ">{item}</p>
         <div className="m-3 flex items-center rounded-xl bg-gray-300 w-full">
-          <div className=" md:pl-4">place {item}</div>
-          <div>0.53 miles</div>
+          <p className="text-md md:p-6 ">{item.name}</p>
+          <div className=" md:pl-4">place {item.opening_hours}</div>
+          <div>{item.isOpen}</div>
         </div>
       </div>
     ))}
@@ -91,15 +90,19 @@ const FindNearbyClinics = (props: any) => {
     // Query
     placesService.nearbySearch(request, function(results:any, status: any) {
       if (status === placesLibrary.PlacesServiceStatus.OK) {
+        let newListOfPlaceIds = [];
+        let newListOfMarkers = []
         results.forEach(function(place) { // Set markers for each place found
           const location = place.geometry.location;
           const lat = location.lat();
           const lng = location.lng();
           const marker = PlaceMarker(lat, lng, reactMap);
           const resultPlaceId = place.place_id;
-          setPlaceId((prevId) => [...prevId, resultPlaceId]);
-          setMarkers((prevMarkers) => [...prevMarkers, marker]);
+          newListOfPlaceIds.push(resultPlaceId);
+          newListOfMarkers.push(marker);
         });
+        setPlaceId((prevId) => [...prevId, ...newListOfPlaceIds]);
+        setMarkers((prevMarkers) => [...prevMarkers, ...newListOfMarkers]);
 
       }
     });
@@ -113,6 +116,8 @@ const FindNearbyClinics = (props: any) => {
     })
   }, [placeId])
 
+
+  // Updates placeInfo objs that have name, opening hours, isOpen (T or F) and trigger useEffect
   function getPlaceDetails(placeId: any) {
     var detailsRequest = {
       placeId: placeId,
@@ -130,7 +135,6 @@ const FindNearbyClinics = (props: any) => {
           isOpen: place.opening_hours.open_now,
         }
         setPlaceInfo((oldPlaceInfo) => [...oldPlaceInfo, sendPlaceInfo]);
-
       }
     });
   };
@@ -165,7 +169,7 @@ const UserIcon = (props: any) => {
 const ReactMap = (props: any) => {
   const { placeInfo, setPlaceInfo } = props;
   return (
-  <APIProvider apiKey={'AIzaSyCWETJ9uGNjQOOFboldqZr5mViDMeGNirI'}>
+  <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
     <Map 
       mapId = {'0'}
       style={{width: '100%', height: '100%'}}
