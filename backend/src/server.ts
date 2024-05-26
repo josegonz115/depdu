@@ -73,7 +73,7 @@ app.use(errorMiddleware);
 
 
 __dirname = path.resolve(); 
-if (process.env.NODE_ENV === 'production'){
+if (process.env.NODE_ENV === 'any'){
     // set static folder
     app.use(express.static(path.join(__dirname, '/frontend/dist')));
     // any route not api will be redirected to index.html
