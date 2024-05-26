@@ -15,11 +15,13 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
+  Image,
 } from '@chakra-ui/react';
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoIosClose } from "react-icons/io";
 import msgpfp from '../images/msgpfp.jpeg';
 import { Link as ReactRouterLink } from 'react-router-dom'
+import logo from '../images/logo.png';
 
 
 
@@ -59,7 +61,9 @@ function NavBar() {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
-            <Box>Logo</Box>
+            <Box w='50px' h='50px'>
+              <Image src={logo}/>
+            </Box> 
             <HStack
               as={'nav'}
               spacing={4}
