@@ -1,6 +1,7 @@
 import React from 'react'; 
-import { Box, Text, Flex, useColorModeValue } from "@chakra-ui/react";
+import { Box, Text, Flex, useColorModeValue, Container } from "@chakra-ui/react";
 import TextAnimation from './TextAnimation';
+import BasicStatistics from './BasicStatistics';
 
 function YellowCircleBackground() {
   return (
@@ -44,10 +45,10 @@ function YellowCircleBackground() {
 
 function Intro() {
   return (
-    <Flex position="relative" justifyContent="center" alignItems="center" height="70vh">
-      <Box pt="50px" textAlign="center" position="relative">
-        
-        <TextAnimation 
+    <Container maxW="container.xl" p={4}>
+      <Flex position="relative" justifyContent="center" alignItems="center" height="60vh">
+        <Box pt="50px" textAlign="center" position="relative">
+          <TextAnimation 
             AnimatedSequence={[
               "contraceptives near me.",
               "information about my body.",
@@ -58,10 +59,20 @@ function Intro() {
             AnimatedColor="#786AF4"
             BaseColor="black"
           />
-        <YellowCircleBackground />
+          <YellowCircleBackground />
+        </Box>
+      </Flex>
+      <Box mt={-20}>
+        <BasicStatistics />
       </Box>
-    </Flex>
+    </Container>
   );
 }
 
-export default Intro;
+export default function Home() {
+  return (
+    <div>
+      <Intro />
+    </div>
+  );
+}

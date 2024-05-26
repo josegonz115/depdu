@@ -11,7 +11,7 @@ function LandingPage() {
       <Box height='100vh'>
         <Intro/>
       </Box>
-      <Box mt="20px">
+      <Box mt="15px">
         <Benefits/>
       </Box>
       <Box>
