@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@vis.gl/react-google-maps": "^1.0.0",
     "react-google-font-loader": "^1.1.0"
   }
 }
