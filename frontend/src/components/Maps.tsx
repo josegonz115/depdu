@@ -5,6 +5,15 @@ import duckImage from '../assets/duck.webp';
 const PlacesNearYou = (props: any) => {
   const { placeInfo } = props;
   const [ infoAvaliable, setInfoAvaliable ] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+
+  const handleMouseDown = () => {
+    setIsClicked(true);
+  };
+
+  const handleMouseUp = () => {
+    setIsClicked(false);
+  };
   useEffect(()=> {
     if (!placeInfo) return;
     setInfoAvaliable(true);
@@ -12,13 +21,13 @@ const PlacesNearYou = (props: any) => {
   return (
     <>
     {infoAvaliable && placeInfo.map((item, index)=> (
-      <div key={index} className="flex flex-row" onClick={item.onClick}>
-        <div className="m-3 flex items-center rounded-xl bg-gray-300 w-full">
-          <p className="text-md md:p-6 ">{item.name}</p>
-          <div className=" md:pl-4">place {item.opening_hours}</div>
-          <div className=" md:pl-4">distance {item.distance}</div>
+      <div key={index} className={`flex justify-end cursor-pointer`} onClick={item.onClick}>
+        <div className={`m-2 p-3 flex flex-col w-full border-b border-gray-300 hover:text-gray-500 active:text-gray-700 `} >
+          <p className="text-lg font-medium">{item.name}</p>
+          <p className="font-normal">{item.opening_hours} <span className="text-xs">{'\u25CF'}</span> {item.distance} mi</p>
+          <p className="font-normal"></p>
 
-          <div>{item.isOpen}</div>
+          <p>{item.isOpen}</p>
         </div>
       </div>
     ))}
@@ -31,12 +40,30 @@ function getCurrentDayIndex() {
   const date = new Date();
   return date.getDay();
 }
+function zoomToPlace(lat, lng, zoomLevel, duration, map) {
+  const target = { lat: lat, lng: lng };
+
+  // Smoothly pan to the target location
+  map.panTo(target);
+
+  // Gradually zoom in to the target level
+  let currentZoom = map.getZoom();
+  const zoomStep = (zoomLevel - currentZoom) / (duration / 100);
+
+  const zoomInterval = setInterval(() => {
+    if ((zoomStep > 0 && currentZoom >= zoomLevel) || (zoomStep < 0 && currentZoom <= zoomLevel)) {
+      clearInterval(zoomInterval);
+    } else {
+      currentZoom += zoomStep;
+      map.setZoom(currentZoom);
+    }
+  }, 100);
+}
 
 const PlaceMarker = (lat: number, lng: number, reactMap: any) => {
   return (
     <AdvancedMarker position={{lat: lat, lng: lng}} onClick={() => {
-      reactMap.setZoom(16);
-      reactMap.setCenter({ lat, lng });
+      zoomToPlace(lat, lng, 16, 500, reactMap);
     }}/>
   )
 }
@@ -85,7 +112,7 @@ const FindNearbyClinics = (props: any) => {
     var request = {
       keyword: 'birth control near me|planned parenthood', // Search for bc / planned parenthood near you
       location: { lat: lati, lng: long }, // Replace with your current location
-      radius: 16093.4, // 16093.4 meters (10 mile) radius
+      radius: 32186.9, // 32186.9 meters (20 mile) radius
       type: 'health',
     };
 
@@ -141,12 +168,8 @@ const FindNearbyClinics = (props: any) => {
           opening_hours: place.opening_hours.weekday_text[getCurrentDayIndex()],
           isOpen: place.opening_hours.open_now,
           onClick: () => {
-            reactMap.setZoom(11);
-            reactMap.setCenter({ lat: lati, lng: long});
-            setTimeout(() => {
-              reactMap.setZoom(16);
-              reactMap.setCenter({ lat, lng });
-            }, 1500);
+            reactMap.setZoom(16);
+            reactMap.setCenter({ lat, lng });
           }, 
           lat,
           lng,
@@ -170,8 +193,7 @@ const UserIcon = (props: any) => {
   return (
   <>
   <AdvancedMarker position={{lat: lati, lng: long}} onClick={() => {
-      reactMap.setZoom(16);
-      reactMap.setCenter({ lat: lati, lng: long });
+      zoomToPlace(lati, long, 16, 500, reactMap);
     }}>
     <img src={duckImage} className="rounded-full shadow-glow-yellow border-8 border-yellow-500 border-opacity-100" width={40} height={40}></img>
   </AdvancedMarker>
@@ -215,7 +237,7 @@ function calculateDistance(lat1: number, lng1: number, lat2: number, lng2: numbe
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c; // Distance in miles
   console.log("distance: ", distance);
-  return distance;
+  return Number(distance.toFixed(1));
 }
 function deg2rad(deg: number) {
   return deg * (Math.PI / 180);
@@ -231,17 +253,19 @@ function Maps () {
   // const lng = -117.826508;
   return (
     <>
-    <div className="mx-auto w-full h-full"> {/* container */}
-      <div className="p-8 grid grid-cols-2 grid-rows-1"> {/* grid that holds places and map */}
-        <div className="debug"> {/* recommending places near you */}
-          <p className="m-2 flex items-end ">Places Near You</p>
+    <div className="flex debug justify-left items-center w-full h-screen">
+      <div className="flex justify-center items-center h-screen"> {/* container */}
+        <div className="p-8 grid grid-cols-2 h-full"> {/* grid that holds places and map */}
+          <div className="debug overflow-y-scroll h-full md:col-span-1"> {/* recommending places near you */}
+            <p className="m-2 flex justify-end block">Places Near You</p>
 
-          <div className="mt-8 font-inter font-bold grid grid-rows-5 grid-cols-1">
-            <PlacesNearYou placeInfo={placeInfo} l  at={lat} lng={lng}/>
+            <div className="mt-8 font-inter font-bold grid grid-rows-5 grid-cols-1 ">
+              <PlacesNearYou placeInfo={placeInfo} lat={lat} lng={lng}/>
+            </div>
           </div>
-        </div>
-        <div className="debug"> {/* map */}
-          <ReactMap placeInfo={placeInfo} setPlaceInfo={setPlaceInfo} lat={lat} lng={lng}/>
+          <div className="debug h-full"> {/* map */}
+            <ReactMap placeInfo={placeInfo} setPlaceInfo={setPlaceInfo} lat={lat} lng={lng}/>
+          </div>
         </div>
       </div>
     </div>
