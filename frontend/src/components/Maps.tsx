@@ -7,11 +7,12 @@ const PlacesNearYou = (props: any) => {
   const { placeInfo, setPlaceInfo, setNumClinics } = props;
   const [ infoAvailable, setInfoAvaliable ] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
+  const [ newPlaceInfo, setNewPlaceInfo ] = useState([]);
 
   useEffect(()=> {
     if (!placeInfo || (infoAvailable && placeInfo)) return;
     setInfoAvaliable(true);
-  }, [placeInfo, infoAvailable]);
+  }, [placeInfo]);
 
   useEffect(() => {
     if (!infoAvailable) return;
@@ -21,13 +22,13 @@ const PlacesNearYou = (props: any) => {
       }
       return a.distance - b.distance;
     });
-    setPlaceInfo(sortedPlaceInfo);
+    setNewPlaceInfo((prev) => [...prev, ...sortedPlaceInfo]);
     setNumClinics(sortedPlaceInfo.length);
 
-  }, [infoAvailable, , placeInfo, setPlaceInfo, setNumClinics])
+  }, [infoAvailable, placeInfo])
   return (
     <>
-    {placeInfo && placeInfo.map((item, index)=> (
+    {newPlaceInfo && newPlaceInfo.map((item, index)=> (
       <div key={index} className={`flex justify-end cursor-pointer`} onClick={item.onClick}>
         <div className={`m-2 p-3 flex flex-col w-full ${index == placeInfo.length-1 ? 'border-b' : ''}border-b border-gray-300 hover:text-gray-500 active:text-gray-700`} >
           <p className="text-md font-medium">{item.name}</p>
@@ -159,7 +160,7 @@ const FindNearbyClinics = (props: any) => {
   function getPlaceDetails(placeId: any) {
     var detailsRequest = {
       placeId: placeId,
-      fields: ['name', 'opening_hours', 'geometry'], // Request the name and opening hours fields
+      fields: ['name', 'opening_hours', 'geometry', 'adr_address', 'formatted_phone_number','photos','address_component', 'scope'], // Request the name and opening hours fields
     };
   
     placesService.getDetails(detailsRequest, function (place, status) {
@@ -167,6 +168,7 @@ const FindNearbyClinics = (props: any) => {
         const location = place.geometry.location;
         const lat = location.lat();
         const lng = location.lng();
+        console.log("pplace", place)
         const sendPlaceInfo = {
           name: place.name,
           opening_hours: place.opening_hours.weekday_text[getCurrentDayIndex()],
@@ -246,13 +248,27 @@ function deg2rad(deg: number) {
   return deg * (Math.PI / 180);
 }
 
+function IndividualPlace(props: any) {
+  const { name, opening_hours, distance, setIsClicked } = props;
+  return (
+    <div className="w-full h-full">
+      <p className="text-md font-medium">{name}</p>
+      <p className="font-normal">{opening_hours} <span className="text-xs">{'\u25CF'}</span> {distance} mi</p>
+    </div>
+  )
+
+}
+
 // given location find birth control places nearby and find them in a radius
 function Maps () {
   const [placeInfo, setPlaceInfo] = useState([]);
   const lat = 34.052235; // 33.684566  34.052235 LA
   const lng = -118.243683; // -117.826508 -118.243683
   const [numClinics, setNumClinics] = useState(null);
-
+  const [isClicked, setIsClicked] = useState(false);
+  const handleToggle = () => {
+    setIsClicked(!isClicked);
+  };
   // const lat = 33.684566; // Irvine
   // const lng = -117.826508;
   return (
@@ -263,9 +279,9 @@ function Maps () {
           <div className="overflow-y-scroll h-full md:col-span-1"> {/* recommending places near you */}
             <div className="w-full h-full flex jusitfy-end pl-24 box-border">
               <div className="font-inter font-bold grid grid-rows-20 grid-cols-1">
-
+                {!isClicked ? (
                 <div className="font-inter font-bold grid grid-rows-20 grid-cols-1 border-l-2 border-b-2 rounded-bl-xl rounded-tl-xl border-t-2">
-                  <div className="m-2 mt-4 mb-4 p-3 sticky top-0 z-10 bg-white h-17 flex flex-row items-left block text-2xl" style={{ boxShadow: '0 20px 30px -10px rgba(255, 255, 255, 1)'}}>
+                  <div className="m-2 mt-4 p-3 sticky top-0 z-10 bg-white h-17 flex flex-row items-left block text-2xl" style={{ boxShadow: '0 20px 30px -10px rgba(255, 255, 255, 1)'}}>
                     <img src={searchIcon} className="m-4 w-8 h-8 flex items-center items-center"></img>
                     <div>
                       <p className="underline">Clinics Near You</p>
@@ -273,7 +289,10 @@ function Maps () {
                     </div>
                   </div>
                   <PlacesNearYou placeInfo={placeInfo} setPlaceInfo={setPlaceInfo} setNumClinics={setNumClinics} lat={lat} lng={lng}/>
-                </div>
+                </div>) : (
+                  <div></div>
+                )
+                }
               </div>
             </div>
           </div>
