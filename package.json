@@ -9,8 +9,7 @@
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
-    "build": "npm i && cd backend && npm i && cd ../frontend && npm i",
-    "prestart": "cd ./backend && tsc",
+    "build": "npm i && cd backend && npm i && tsc && cd ../frontend && npm i && npm run build",
     "start": "cd ./backend && node index.js"
   },
   "keywords": [],
