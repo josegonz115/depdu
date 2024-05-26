@@ -10,7 +10,7 @@ To access depdu, follow these steps:
 Open your web browser.
 Go to the following URL: https://depdu.onrender.com/
 
-### Usage
+## Usage
 To use depdu, follow these steps:
 
 Visit the website at https://depdu.onrender.com/
@@ -20,20 +20,20 @@ Answer the series of questions asked by depdu and provide additional information
 To find the nearest health clinic click on the "Near me" section on the navigation bar
 Use the integrated Google Maps feature to locate the nearest birth control clinics and Planned Parenthood locations.
 
-#### Features
+## Features
 Personalized Birth Control Suggestions: Get tailored birth control options based on your responses.
 Interactive Q&A: Answer a series of questions to help depdu understand your needs better.
 Google Maps Integration: Find the nearest birth control clinics and Planned Parenthood locations.
 
-##### Authors
+## Authors
 Valerie Huynh
 Jose Gonzalez
 Alvis Yong
 
-###### Version
+## Version
 1.0
 Initial Release
 
 
-####### License
+## License
 This project is licensed under the MIT License - see the LICENSE.md file for details
