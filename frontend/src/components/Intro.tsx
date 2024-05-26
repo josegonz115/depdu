@@ -1,5 +1,7 @@
 import React from 'react'; 
-import { Box, Text, Flex } from "@chakra-ui/react";
+import { Box, Text, Flex, useColorModeValue, Container } from "@chakra-ui/react";
+import TextAnimation from './TextAnimation';
+import BasicStatistics from './BasicStatistics';
 
 function YellowCircleBackground() {
   return (
@@ -8,30 +10,30 @@ function YellowCircleBackground() {
       zIndex="-1"
       left="50%"
       transform="translateX(-50%)"
-      bottom="0"
-      width="200vh"
-      height="170vh"
+      top="-1600px" // Adjust the top value to position the circle
+      width="2150px"
+      height="2150px"
       overflow="hidden"
     >
       <Box
         position="absolute"
-        top="0px" // Adjusted from -1050px
+        top="-100px"
         left="50%"
         transform="translateX(-50%)"
-        width="2150px"
-        height="2150px"
+        width="2100px"
+        height="2100px"
         borderRadius="50%"
         background="#FCF9FF"
-        boxShadow="0px 43px 61.3px 0px rgba(173, 58, 58, 0.20)"
+        boxShadow="0px 43px 61.3px 0px rgba(226, 206, 255, 1)"
         zIndex="1"
       />
       <Box
         position="absolute"
-        top="0px" // Adjusted from -880px
+        top="-100px"
         left="50%"
         transform="translateX(-50%)"
-        width="2150px"
-        height="2150px"
+        width="2100px"
+        height="2100px"
         borderRadius="50%"
         background="radial-gradient(45.49% 45.49% at 50% 50%, purple 0%, #FFF 100%)"
         mixBlendMode="multiply"
@@ -43,26 +45,34 @@ function YellowCircleBackground() {
 
 function Intro() {
   return (
-    <Flex position="relative" justifyContent="center" alignItems="center" minHeight="100vh">
-      <Box pt="100px" textAlign="center">
-        <Flex  
-          backgroundColor="#C8C8C8" 
-          opacity="40%"
-          borderRadius="30px"  
-          mb="10px"
-          alignItems="center"
-          justifyContent="center"
-          width='241px'
-        > 
-          <Text fontWeight="bold" color="#6100A2">Our Story</Text>
-        </Flex>
-        <Text fontWeight="bold" fontSize="60px" color="black" width="672px" height="146px">
-          Connecting customers through technology 
-        </Text>
-        <YellowCircleBackground/>
+    <Container maxW="container.xl" p={4}>
+      <Flex position="relative" justifyContent="center" alignItems="center" height="60vh">
+        <Box pt="50px" textAlign="center" position="relative">
+          <TextAnimation 
+            AnimatedSequence={[
+              "contraceptives near me.",
+              "information about my body.",
+              "birth control recommendations.",
+            ]}
+            baseText="I'm looking for"
+            AnimatedSpeed={2000}
+            AnimatedColor="#786AF4"
+            BaseColor="black"
+          />
+          <YellowCircleBackground />
+        </Box>
+      </Flex>
+      <Box mt={-20}>
+        <BasicStatistics />
       </Box>
-    </Flex>
+    </Container>
   );
 }
 
-export default Intro;
+export default function Home() {
+  return (
+    <div>
+      <Intro />
+    </div>
+  );
+}

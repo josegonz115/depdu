@@ -1,40 +1,29 @@
 
 import './App.css'
 import {
-  createBrowserRouter,
-  RouterProvider,
-  // Route,
-  // Link,
+  BrowserRouter,
+  Route,
+  Routes,
 } from "react-router-dom";
 import LandingPage from './routes/LandingPage';
+import Chat from './routes/ChatbotPage';
+import NavBar from './components/NavBar';
 //import Chat from './routes/ChatbotPage';
 import Maps from './components/Maps';
 
 function App() {
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: (
-        <LandingPage />
-      ),
-    },
-    // {
-    //   path: "/chat",
-    //   element: (
-    //     <Chat />
-    //   ),
-    // },
-    {
-      path: "/maps",
-      element: (
-        <Maps/>
-      ),
-    },
-  ]);
+
   return (
     <main className='App'>
-        <></>
-        <RouterProvider router={router} />
+      <BrowserRouter basename="/">
+        <NavBar/>
+        <Routes>
+          <Route path="/" element={<LandingPage />}/> {/* 👈 Renders at /app/ */}
+          <Route path="/chat" element={<Chat />}/> {/* 👈 Renders at /app/ */}
+          <Route path="/maps" element={<Maps />}/> {/* 👈 Renders at /app/ */}
+          <Route path="*" element={<h1 className='m-auto'>Ooopsie no page here 🥹</h1> }/> {/* 👈 Renders at /app/ */}
+        </Routes>
+      </BrowserRouter>
     </main>
   )
 }
