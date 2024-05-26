@@ -11,6 +11,7 @@
     "dev": "tsx watch src/server.ts"
   },
   "dependencies": {
+    "@langchain/community": "^0.2.3",
     "@langchain/openai": "^0.0.33",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",

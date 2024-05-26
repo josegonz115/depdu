@@ -8,8 +8,13 @@ import aiRoutes from "./routes/ai.routes.js";
 import errorMiddleware from "./middleware/errorMiddleware.js";
 import { Server } from "socket.io";
 import { createServer } from "http";
-import {startResponse} from './langchain/langchain.js';
+import {appendResponses, startResponse} from './langchain/langchain.js';
 
+export interface THistory {
+    text: string;
+    sender: "user" | "llm";
+    profileIcon?: string;
+}
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -29,16 +34,27 @@ const socket = httpServer.listen(socketPort, () => {
     console.log(`socket listening on port ${socketPort}`);
 });
 
-io.on("connection", (socket) => {
+io.on("connection", async(socket) => {
     console.log("user connected");
 
-    socket.on("button pressed", async() => {
+    socket.on("page loaded", async() => {
         const stream = await startResponse();
         for await (const chunkString of stream) {
             socket.emit("chatbox", chunkString);
         }
         socket.emit("chatbox end");
     });
+
+    socket.on("button pressed", async(data:THistory[]) => {
+        console.log(data);//TESTING
+        const stream = await appendResponses(data);
+        for await (const chunkString of stream) {
+            socket.emit("chatbox", chunkString);
+        }
+        socket.emit("chatbox end");
+    });
+
+
 
     socket.on("disconnect", function () {
         console.log("user disconnected");

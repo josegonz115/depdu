@@ -4,9 +4,14 @@ import { FiSend } from "react-icons/fi";
 import pfp from '../images/msgpfp.jpeg';
 import duckpfp from '../images/duckpfp.jpeg';
 
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
 export type TllmResponse = {
     response:string
 };
+
+
 
 export interface THistory {
     text: string;
@@ -14,6 +19,7 @@ export interface THistory {
     profileIcon?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ChatMessage = ({ text, sender, profileIcon }: THistory) => {
     return (
         <div className={`flex ${sender === "user" ? "justify-end" : "justify-start"} items-end`}>
@@ -22,7 +28,7 @@ const ChatMessage = ({ text, sender, profileIcon }: THistory) => {
             )}
             <div className={`p-3 rounded-lg shadow ${sender === "user" ? "bg-blue-100 self-end" : "bg-white self-start"}`}
                 style={{ maxWidth: '75%', minWidth: '30%', wordBreak: 'break-word' }}>
-                {text}
+                <Markdown remarkPlugins={[remarkGfm]}>{text}</Markdown>
             </div>
             {sender === "user" && (
                 <img src={pfp} alt="profile" className="w-8 h-8 rounded-full ml-2" />
@@ -31,69 +37,46 @@ const ChatMessage = ({ text, sender, profileIcon }: THistory) => {
     );
 };
 
-const Chatbox = () => {
+const Chatbox = ({sharedOptionsHandler}:{ sharedOptionsHandler:(newData: string) => void}) => {
     const [chatHistory, setChatHistory] = useState<THistory[]>([]);
     const [socket, setSocket] = useState<Socket | null>(null);
     const [streamStarted, setStreamStarted] = useState(false);
     const [chatboxActivate, setChatboxActivate] = useState(false);
-    // const [llmResponses, setLlmResponse] = useState<string[]>([]);
-    // const [userPrompts, setUserPrompts] = useState<string[]>([]);
     const [currentPrompt, setCurrentPrompt] = useState('');
     // const [currentResponse, setCurrentResponse] = useState('');
 
 
-    // useEffect(() => {
-    //     const history: THistory[] = [];
-    //     for (let i = 0; i < llmResponses.length; i++) {
-    //         history.push({ text: userPrompts[i], sender: "user" });
-    //         history.push({ text: llmResponses[i], sender: "llm" });
-    //     }
-    //     setChatHistory(history);
-    // }, [currentResponse]);
+
 
     useEffect(() => {
-        const socket = io("http://localhost:5010"); // FINISH
+        // const socket = io("http://localhost:5010"); // FINISH
+        const socket = io(import.meta.env.VITE_WEBSOCKET); // FINISH
         setSocket(socket);
+
+        setChatHistory(prevChatHistory => [...prevChatHistory, { text: '', sender: "llm" }]);
+        setStreamStarted(true);
+
+        // Emit an event when the page has fully loaded
+        socket.emit("page loaded");
+
         return () => {
             socket.disconnect();
         };
     }, []);
 
     useEffect(() => {
+        console.log(chatHistory);//TESTING
         if (socket && currentPrompt.length > 0 && !streamStarted) {
-            console.log(chatboxActivate);
-            socket.emit("button pressed");
+            setChatHistory(prevChatHistory => {
+                const updatedChatHistory = [...prevChatHistory, { text: currentPrompt, sender: 'user' as 'llm' | 'user' }];
+                socket.emit("button pressed", updatedChatHistory);
+                return updatedChatHistory;
+            });
             setStreamStarted(true);
             setChatHistory(prevChatHistory => [...prevChatHistory, { text: '', sender: "llm" }]);
+            setCurrentPrompt('');
         }
     }, [chatboxActivate]);
-
-
-    // const llmResponses = [
-    //     "Hello, how can I assist you today?",
-    //     "There are several types of birth control methods including barrier methods, hormonal methods, emergency contraception, and permanent methods. Which one are you interested in?",
-    //     "Barrier methods include things like condoms and diaphragms. Hormonal methods include birth control pills, patches, shots, vaginal rings, and implants.",
-    //     "Yes, birth control pills are a type of hormonal contraception. They work by preventing ovulation and thickening cervical mucus to keep sperm from reaching the egg.",
-    //     "It is recommended to take the pill at the same time every day. If you miss a pill, follow the instructions on the package or contact your healthcare provider.",
-    //     `You're welcome! If you have any other questions, feel free to ask.`,
-    // ];
-
-    // const userPrompts = [
-    //     "I have a question about birth control.",
-    //     "Can you tell me about the different types of birth control?",
-    //     "Can you tell me more about hormonal methods?",
-    //     "How do birth control pills work?",
-    //     "What happens if I miss a pill?",
-    //     "Thank you for the information.",
-    // ];
-    // useEffect(() => {
-    //     const history: THistory[] = [];
-    //     for (let i = 0; i < llmResponses.length; i++) {
-    //         history.push({ text: userPrompts[i], sender: "user" });
-    //         history.push({ text: llmResponses[i], sender: "llm" });
-    //     }
-    //     setChatHistory(history);
-    // }, []);
 
     useEffect(() => {
         if(socket){
@@ -108,6 +91,10 @@ const Chatbox = () => {
             const endHandler = () => {
                 console.log('Stream ended'); 
                 setStreamStarted(false);
+                const lastMessage = chatHistory[chatHistory.length - 1];
+                if(lastMessage.sender === 'llm'){
+                    sharedOptionsHandler(lastMessage.text);
+                }
             };
             socket.on("chatbox", handler);
             socket.on("chatbox end", endHandler);
@@ -133,18 +120,21 @@ const Chatbox = () => {
                         />
                     ))}
                 </div>
-                <div className="flex items-center p-2 border-t border-gray-300"> {/* input container */}
+                <div className="flex items-center p-2 border-t border-gray-300  my-auto "> {/* input container */}
                     <input 
                         placeholder='Message depdu...' 
                         className="flex-grow bg-white h-10 px-4 border border-gray-300 rounded-lg" 
+                        value={currentPrompt}
+                        onChange={e => setCurrentPrompt(e.target.value)}
                     />
-                    <button className="ml-2 text-blue-500">
+                    <button className="ml-2 text-blue-500" onClick={() => setChatboxActivate(!chatboxActivate)}>
                         <FiSend size={24} color='black'/>
                     </button>
                 </div>
             </div>
-            <button className="mx-auto w-5/6 h-10 rounded-1xl shadow-md bg-gradient-to-r 
-            font-bold text-l bg-gray-200 mb-2 mt-2">View All Saved</button> {/* chatbox-viewsaved */}
+            <button className="mx-auto w-5/6 h-10 rounded-1xl shadow-md bg-gradient-to-r font-bold text-l bg-gray-200 mb-2 mt-2">
+                View All Saved
+            </button> {/* chatbox-viewsaved */}
         </div>
     );
 };
