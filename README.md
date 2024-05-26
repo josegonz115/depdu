@@ -2,7 +2,7 @@
 depdu is a chatbot designed to suggest the best birth control options based on your background. The webapp will ask a series of questions and by providing detailed responses and descriptions, depdu will recommend birth control methods tailored to your needs. Additionally, depdu includes a feature that shows the nearest birth control clinics and Planned Parenthood locations using Google Maps.
 
 ## DISCLAIMER
-We are not healthcare professionals. depdu is designed to provide general guidance for those who may be shy to reach out or cannot find other resources. For professional medical advice, diagnosis, or treatment, always seek the advice of your physician or other qualified health provider. If you are in need of immediate help, dial 911 or seek actual medical assistance.
+We are not healthcare professionals. depdu is intended to offer general guidance for individuals who may be hesitant to seek help or are unable to find other resources. For professional medical advice, diagnosis, or treatment, always consult your physician or another qualified healthcare provider. If you require immediate assistance, dial 911 or seek emergency medical help.
 
 ## Access
 To access depdu, follow these steps:
