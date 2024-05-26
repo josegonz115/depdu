@@ -14,6 +14,7 @@ Go to the following URL: https://depdu.onrender.com/
 To use depdu, follow these steps:
 
 Visit the website at https://depdu.onrender.com/
+
 Click on "Chatbot" on the navigation bar
 Answer the series of questions asked by depdu and provide additional information necessary to receive personalized birth control suggestions.
 
