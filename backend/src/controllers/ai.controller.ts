@@ -167,15 +167,16 @@ const withMessageHistory = new RunnableWithMessageHistory({
     historyMessagesKey: "chat_history",
 });
 
-const testModel = asyncMiddleware(async (req, res, next) => {
-    const stream = await startResponse();
-    const readableStreams = await startResponse();
-    let responseWrapper;
-    for await (responseWrapper of readableStreams) {
-        const overview = responseWrapper;
+// const testModel = asyncMiddleware(async (req, res, next) => {
+//     const stream = await startResponse();
+//     const readableStreams = await startResponse();
+//     let responseWrapper;
+//     for await (responseWrapper of readableStreams) {
+//         const overview = responseWrapper;
+//     }
+// });
 
-    }
-});
 
 
-export { testModel, testTwo };
+
+export { testModel };
