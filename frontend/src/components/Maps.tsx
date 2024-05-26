@@ -15,14 +15,15 @@ const PlacesNearYou = (props: any) => {
   }, [placeInfo]);
 
   useEffect(() => {
-    if (!infoAvailable) return;
+    if (!infoAvailable || !placeInfo) return;
     const sortedPlaceInfo = [...placeInfo].sort((a, b) => {
       if (a.distance === b.distance) {
         return b.isOpen - a.isOpen;
       }
       return a.distance - b.distance;
     });
-    setNewPlaceInfo((prev) => [...prev, ...sortedPlaceInfo]);
+    setNewPlaceInfo(sortedPlaceInfo);
+    console.log("sortedPlaceInfo", sortedPlaceInfo)
     setNumClinics(sortedPlaceInfo.length);
 
   }, [infoAvailable, placeInfo])
