@@ -27,7 +27,7 @@ function App() {
   ]);
   return (
     <main className='App'>
-        <NavBar />
+        <NavBar/>
         <RouterProvider router={router} />
     </main>
   )
