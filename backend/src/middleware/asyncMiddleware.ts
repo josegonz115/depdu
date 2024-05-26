@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { AsyncFunction, RequestHandler, TAsyncHandler } from '../types/types';
+import { AsyncFunction, RequestHandler, TAsyncHandler } from '../types/types.js';
 
 // ensures that any unhandled promise rejectsions in the middleware function are passed to 
 // Express's erorr handling middleware

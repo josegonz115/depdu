@@ -1,13 +1,6 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { THistory } from "../server.js";
-import { TavilySearchResults } from "@langchain/community/tools/tavily_search";
-import { createOpenAIFunctionsAgent } from "langchain/agents";
-import { createRetrieverTool } from "langchain/tools/retriever";
 import { TavilySearchAPIRetriever } from "@langchain/community/retrievers/tavily_search_api";
-
-/*
-  [{"title":"Weather in December 2023 in San Francisco, California, USA","url":"https://www.timeanddate.com/weather/@5391959/historic?month=12&year=2023","content":"Currently: 52 °F. Broken clouds. (Weather station: San Francisco International Airport, USA). See more current weather Select month: December 2023 Weather in San Francisco — Graph °F Sun, Dec 17 Lo:55 6 pm Hi:57 4 Mon, Dec 18 Lo:54 12 am Hi:55 7 Lo:54 6 am Hi:55 10 Lo:57 12 pm Hi:64 9 Lo:63 6 pm Hi:64 14 Tue, Dec 19 Lo:61","score":0.96006},...]
-*/
 
 const createGPTInstance = () => {
     return new ChatOpenAI({
@@ -121,61 +114,3 @@ export const webCrawl = async (options: string) => {
     const retrievedDocs = await retriever.invoke(suggestionStartingPrompt);
     return {retrievedDocs};
 };
-
-
-// // Parse the JSON response
-// const data = JSON.parse(responseJson);
-
-// Extract the required items from the "results" section
-// const parsedResults = data.results.map((result, index) => ({
-//     image: data.images[index] || null,  // Assuming the images correspond to the results in the same order
-//     title: result.title,
-//     url: result.url,
-//     content: result.content
-// }));
-
-
-/*
-
-const parsedResults = object["retrievedDocs".map((res)=>{
-
-});
-
-export type TSuggestions = {
-    image: string;
-    title: string;
-    url: string;
-    content: string;
-};
-{
-    "retrievedDocs": [
-        {
-            "pageContent": "According to research and experts, several factors may determine which birth control suits the needs and preferences of an individual, including:\nThe Best Birth Control Options\n“When deciding on the best birth control, it’s really about finding the one that fits well into someone’s life,” emphasizes Horowitz. Regardless, it’s particularly valuable for gaining a clearer understanding of one’s cycle, she notes\nHow to Find More Information About Birth Control Options\nBoth Dr. Evans and Horowitz frequently direct individuals to Bedsider.org, a birth control support network for in-depth information on all things birth control, as well as a provider directory.\n “At a fundamental level, birth control works by blocking sperm from getting to eggs, and there are various ways that’s done,” explains Jessica Horowitz, a family nurse practitioner and the chief clinical officer at Tia, a network of online and in-person women’s health clinics offering primary care, mental health, gynecology, and wellness services.\n A Guide To The Best Birth Control Options\nMedically Reviewed\nTable of Contents\nSexual health plays a pivotal role in one’s overall well-being and life satisfaction, and contraception, or birth control, can be an essential part of sex for some. Horowitz says copper IUDs have the following benefits:\nHorowitz also notes the follow possible drawbacks of copper IUDs:\nIndividuals may experience anxiety about IUD insertion procedures, and it’s important for health care providers to address those concerns, say Dr. Evans and Horowitz.\n",
-            "metadata": {
-                "title": "The Best Birth Control Options: A 2024 Guide - Forbes Health",
-                "source": "https://www.forbes.com/health/womens-health/best-birth-control/",
-                "score": 0.97442,
-                "images": null
-            }
-        },
-        {
-            "pageContent": "Pandia Health offers the Twirla and Xulane birth control patches. First, you'll pay $30 to fill out the company's online form. Next, the doctor will review your medical history and write a ...",
-            "metadata": {
-                "title": "The Best Birth Control Patch Brands to Try in 2024 - Healthline",
-                "source": "https://www.healthline.com/health/birth-control/birth-control-patch-brands",
-                "score": 0.96519,
-                "images": null
-            }
-        },
-        {
-            "pageContent": "Birth control questions and answers\nWhat is the percentage of women on birth control?\nNinety-nine percent of women of reproductive age and who are sexually active have used birth control at least once in their lifetime.\n The cost of birth control\nFor a more in-depth analysis of each type of birth control and its cost, read this SingleCare article about the cost of birth control.\n Contraceptive use statistics worldwide\nBirth control statistics in the U.S.\nBirth control statistics by type of contraceptive\nBirth control effectiveness statistics\n | Birth control stats by contraception type | Birth control efficacy stats | Common complications | Costs | FAQs | Research\nBirth control is one of the miracles of modern medicine, letting people take their reproductive health and future into their own hands. Can you lower cholesterol fast?\nMore articles on:\nAlso Read\nFluconazole interactions to avoid\nPostpartum depression stats\n9 foods high in estrogen\nIs it PMS or early pregnancy?\n",
-            "metadata": {
-                "title": "2024 Birth control statistics - SingleCare",
-                "source": "https://www.singlecare.com/blog/birth-control-statistics/",
-                "score": 0.9272,
-                "images": null
-            }
-        }
-    ]
-}
-*/
