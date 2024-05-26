@@ -249,10 +249,7 @@ function Maps () {
   const lat = 34.052235; // 33.684566  34.052235 LA
   const lng = -118.243683; // -117.826508 -118.243683
   const [numClinics, setNumClinics] = useState(null);
-  useEffect(() => {
-    if (!numClinics) return;
-    console.log("numclinics", numClinics);
-  }, [setNumClinics])
+
   // const lat = 33.684566; // Irvine
   // const lng = -117.826508;
   return (
