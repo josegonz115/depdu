@@ -3,6 +3,9 @@ import {APIProvider, Map, AdvancedMarker, Marker, useMap, useMapsLibrary} from '
 import duckImage from '../assets/duck.webp';
 import searchIcon from '../assets/searchicon.jpg';
 
+let latitude: number;
+let longitude: number;
+
 const PlacesNearYou = (props: any) => {
   const { placeInfo, setPlaceInfo, setNumClinics, onPlaceClick } = props;
   const [ infoAvailable, setInfoAvaliable ] = useState(false);
@@ -51,7 +54,8 @@ const PlacesNearYou = (props: any) => {
 // Returns 0-6 depending on the current day of the week
 function getCurrentDayIndex() {
   const date = new Date();
-  return date.getDay();
+  const day = date.getDay();
+  return (day === 0) ? 6 : day - 1;
 }
 function zoomToPlace(lat, lng, zoomLevel, duration, map) {
   const target = { lat: lat, lng: lng };
@@ -81,21 +85,6 @@ const PlaceMarker = (lat: number, lng: number, reactMap: any) => {
     }}/>
   )
 }
-
-// class LatLng {
-//   constructor(lat, lng) {
-//     this.latitude = lat;
-//     this.longitude = lng;
-//   }
-
-//   lat() {
-//     return this.latitude;
-//   }
-
-//   lng() {
-//     return this.longitude;
-//   }
-// }
 
 const FindNearbyClinics = (props: any) => {
   const { lati, long, setPlaceInfo, placeInfo } = props;
@@ -259,7 +248,8 @@ function deg2rad(deg: number) {
 
 function IndividualPlace(props: any) {
   const { place, setIsClicked } = props;
-  const {name, opening_hours, distance, isOpen, photo, city} = place;
+  const {name, opening_hours, distance, isOpen, photo, city, lat, lng} = place;
+  const reactMap = useMap();
   return (
     <div className="font-inter font-bold grid grid-rows-20 grid-cols-1 border-l-2 border-b-2 rounded-bl-xl rounded-tl-xl border-t-2">
       <div className="w-96 flex flex-col">
@@ -290,7 +280,8 @@ function IndividualPlace(props: any) {
           <div className="absolute w-full flex items-top justify-end z-10">
             <button
               className="relative flex items-center text-black justify-center font-bold hover:bg-gray-500 hover:text-white cursor-pointer rounded-full p-1 transition duration-300 ease-in-out outline-none focus:outline-none"
-              onClick={() => { setIsClicked(false) }}
+              onClick={() => { setIsClicked(false); zoomToPlace(latitude, longitude, 12, 500, reactMap);
+              }}
               style={{ width: '40px', height: '40px' }}
             >
               <span className=" hover:opacity-100 transition duration-300 ease-in-out font-inter">X</span>
@@ -308,13 +299,34 @@ function IndividualPlace(props: any) {
 
 }
 
+function getLocation(setLat: any, setLng: any) {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+    console.log("Geolocation is not supported by this browser.");
+  }
+  function showPosition(position) {
+    setLat(position.coords.latitude);
+    setLng(position.coords.longitude);
+  }
+  
+
+}
+
+
 // given location find birth control places nearby and find them in a radius
 function Maps () {
   const [placeInfo, setPlaceInfo] = useState([]);
   // const lat = 34.052235; // 33.684566  34.052235 LA
   // const lng = -118.243683; // -117.826508 -118.243683
-  const lat = 33.684566; // Irvine
-  const lng = -117.826508;
+  // const lat = 33.684566; // Irvine
+  // const lng = -117.826508;
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
+  useEffect(() => {
+    getLocation(setLat, setLng);
+  }, []);
+
   const [numClinics, setNumClinics] = useState(null);
   const [isClicked, setIsClicked] = useState(false);
   const [individualPlace, setIndividualPlace] = useState(null);
@@ -323,25 +335,17 @@ function Maps () {
     setIndividualPlace(place);
   };
 
-  const [divWidth, setDivWidth] = useState(0);
-  const divRef = useRef(null);
-
-  useEffect(() => {
-    // Get the initial width of the div
-    if (divRef.current) {
-      setDivWidth(divRef.current.offsetWidth);
-    }
-  }, []);
   return (
     <>
-    <div className="flex justify-left items-center w-full h-screen">
+    {lat && lng &&
+    <div className="flex justify-center items-center w-full h-screen">
       <div className="flex justify-center items-center h-screen"> {/* container */}
         <div className="p-8 grid grid-cols-2 h-full"> {/* grid that holds places and map */}
           <div className="overflow-y-scroll h-full md:col-span-1"> {/* recommending places near you */}
             <div className="w-full h-full flex jusitfy-end pl-24 box-border">
               <div className="font-inter font-bold grid grid-rows-20 grid-cols-1">
                 {!isClicked ? (
-                <div ref={divRef} className="font-inter font-bold grid grid-rows-20 grid-cols-1 border-l-2 border-b-2 rounded-bl-xl rounded-tl-xl border-t-2">
+                <div className="font-inter font-bold grid grid-rows-20 grid-cols-1 border-l-2 border-b-2 rounded-bl-xl rounded-tl-xl border-t-2">
                   <div className="m-2 mt-4 p-3 sticky top-0 z-10 bg-white h-17 flex flex-row items-left block text-2xl" style={{ boxShadow: '0 20px 30px -10px rgba(255, 255, 255, 1)'}}>
                     <img src={searchIcon} className="m-4 w-8 h-8 flex items-center items-center"></img>
                     <div>
@@ -351,7 +355,7 @@ function Maps () {
                   </div>
                   <PlacesNearYou placeInfo={placeInfo} setPlaceInfo={setPlaceInfo} setNumClinics={setNumClinics} lat={lat} lng={lng} onPlaceClick={handleToggle}/>
                 </div>) : (
-                  individualPlace && <IndividualPlace place={individualPlace} divWidth={divWidth} setIsClicked={setIsClicked} />
+                  individualPlace && <IndividualPlace place={individualPlace} setIsClicked={setIsClicked} />
                 )
                 }
               </div>
@@ -362,7 +366,7 @@ function Maps () {
           </div>
         </div>
       </div>
-    </div>
+    </div>}
     </>
   )
 }
