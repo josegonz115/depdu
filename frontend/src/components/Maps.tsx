@@ -136,9 +136,11 @@ const FindNearbyClinics = (props: any) => {
           newListOfPlaceIds.push(resultPlaceId);
           newListOfMarkers.push(marker);
         });
+        if (newListOfPlaceIds.length === newListOfMarkers.length) {
+          setPlaceId((prevId) => [...prevId, ...newListOfPlaceIds]);
+          setMarkers((prevMarkers) => [...prevMarkers, ...newListOfMarkers]);
+        }
 
-        setPlaceId((prevId) => [...prevId, ...newListOfPlaceIds]);
-        setMarkers((prevMarkers) => [...prevMarkers, ...newListOfMarkers]);
 
       }
     });
