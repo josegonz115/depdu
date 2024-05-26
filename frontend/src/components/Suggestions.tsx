@@ -1,60 +1,24 @@
-import { useEffect, useState } from 'react';
-import SuggestionCard, { IProductSuggestion } from './SuggestionCard';
+import SuggestionCard from './SuggestionCard';
+import { TSuggestions } from '../routes/ChatbotPage';
 
-const Suggestions = () => {
-  const examples = [
-    {
-      name: "Product 1",
-      pictureUrl: "https://example.com/product1.jpg",
-      description: "This is product 1",
-    },
-    {
-      name: "Product 2",
-      pictureUrl: "https://example.com/product2.jpg",
-      description: "This is product 2",
-    },
-    {
-      name: "Product 3",
-      pictureUrl: "https://example.com/product3.jpg",
-      description: "This is product 3",
-    },
-    {
-      name: "Product 4",
-      pictureUrl: "https://example.com/product4.jpg",
-      description: "This is product 4",
-    },
-    {
-      name: "Product 5",
-      pictureUrl: "https://example.com/product5.jpg",
-      description: "This is product 5",
-    },
-    {
-      name: "Product 6",
-      pictureUrl: "https://example.com/product6.jpg",
-      description: "This is product 6",
-    },
-  ];
+const Suggestions = ({sharedOptions}:{sharedOptions:TSuggestions[]}) => {
 
-  const [suggestions, setSuggestions] = useState<IProductSuggestion[]>([]);
-
-  useEffect(() => {
-    setSuggestions([...examples]);
-  }, []);
 
   return (
     <div className='w-full h-screen flex flex-col pr-20'>
-      {suggestions && suggestions.length > 0 ? (
+      {sharedOptions && sharedOptions.length > 0 ? (
         <>
           <h3 className='w-full text-center my-5 text-4xl font-bold pt-5 text-black'>
-            Top Picks for you
+            More information on contraceptives
           </h3>
-          <div className='grid grid-cols-3 grid-flow-row place-items-center gap-10 flex-grow'>
-            {suggestions.map((s, index) => (
+          <div className='grid grid-cols-3 grid-flow-row place-items-center gap-10 my-10'>
+            {sharedOptions.map((s, index) => (
               <SuggestionCard
                 key={index}
-                name={s.name}
-                pictureUrl={s.pictureUrl}
-                description={s.description}
+                title={s.title}
+                image={s.image}
+                content={s.content}
+                url={s.url}
               />
             ))}
           </div>
