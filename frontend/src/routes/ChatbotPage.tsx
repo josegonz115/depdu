@@ -1,17 +1,16 @@
+import React from 'react';
 import './ChatboxPage.css';
 import Chatbox from '../components/Chatbox';
 import Suggestions from '../components/Suggestions';
 
 const Chat = () => {
-
-
-
     return (
         <>
-            <div className='flex bg-pink-400 flex-grow'>
-                <Chatbox/>
+            <div className='flex bg-white flex-grow'>
+                <Chatbox />
                 <Suggestions />
             </div>
+            
         </>
     );
 };

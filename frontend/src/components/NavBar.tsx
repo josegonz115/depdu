@@ -4,8 +4,8 @@ import {
   Flex,
   Avatar,
   HStack,
-  Link,
   IconButton,
+  Link as ChakraLink,
   Button,
   Menu,
   MenuButton,
@@ -18,13 +18,18 @@ import {
 } from '@chakra-ui/react';
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoIosClose } from "react-icons/io";
+import msgpfp from '../images/msgpfp.jpeg';
+import { Link as ReactRouterLink } from 'react-router-dom'
 
 
 
-const Links = ['Home', 'Chat', 'Near Me'];
 
-const NavLink = ({ children }: { children: ReactNode }) => (
-  <Link
+const Links:[string, string][] = [['/', 'Home'], ['/chat', 'Chat'], ['/near-me', 'Near me']];
+
+const NavLink = ({ children, addy }: { children: ReactNode, addy:string }) => (
+  <ChakraLink
+    as={ReactRouterLink}
+    to={addy}
     px={2}
     py={1}
     rounded={'md'}
@@ -32,10 +37,10 @@ const NavLink = ({ children }: { children: ReactNode }) => (
       textDecoration: 'none',
       bg: useColorModeValue('gray.200', 'gray.700'),
     }}
-    href={'#'}>
+    >
     {children}
-  </Link>
-);
+  </ChakraLink>
+);  
 
 function NavBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -60,7 +65,7 @@ function NavBar() {
               spacing={4}
               display={{ base: 'none', md: 'flex' }}>
               {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+                <NavLink key={link[0]} addy={link[0]}>{link[1]}</NavLink>
               ))}
             </HStack>
           </HStack>
@@ -83,7 +88,7 @@ function NavBar() {
                 <Avatar
                   size={'md'}
                   src={
-                    'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
+                    msgpfp
                   }
                 />
               </MenuButton>
@@ -100,8 +105,8 @@ function NavBar() {
         {isOpen ? (
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+            {Links.map((link) => (
+                <NavLink key={link[0]} addy={link[0]}>{link[1]}</NavLink>
               ))}
             </Stack>
           </Box>
