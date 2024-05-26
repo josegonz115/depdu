@@ -23,7 +23,9 @@ Use the integrated Google Maps feature to locate the nearest birth control clini
 
 ## Features
 Personalized Birth Control Suggestions: Get tailored birth control options based on your responses.
+
 Interactive Q&A: Answer a series of questions to help depdu understand your needs better.
+
 Google Maps Integration: Find the nearest birth control clinics and Planned Parenthood locations.
 
 ## Authors
