@@ -9,8 +9,8 @@
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
-    "build": "npm i && cd backend && npm i && cd ../frontend && npm i && npm run build",
-    "start": "tsx backend/src/server.ts"
+    "build": "npm i && cd backend && npm i && tsc && cd ../frontend && npm i && npm run build",
+    "start": "tsx backend/src/server.js"
   },
   "keywords": [],
   "author": "",
