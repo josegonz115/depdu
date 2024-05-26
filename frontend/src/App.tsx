@@ -7,6 +7,7 @@ import {
   // Link,
 } from "react-router-dom";
 import LandingPage from './routes/LandingPage';
+import NavBar from './components/NavBar';
 // import Chat from './routes/ChatbotPage';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
   ]);
   return (
     <main className='App'>
+        <NavBar/>
         <RouterProvider router={router} />
     </main>
   )

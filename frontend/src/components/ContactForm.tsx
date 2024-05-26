@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import computer from "../images/computer_illustration_1.png";
+import connect from "../images/connect.png";
 import {
   Box,
   Button,
@@ -37,7 +37,7 @@ function YellowCircleBackground() {
         width="550px"
         height="500px"
         borderRadius="50%"
-        background="radial-gradient(45.49% 45.49% at 50% 50%, #FFF59F 0%, #FFF 100%)"
+        background="radial-gradient(45.49% 45.49% at 50% 50%, #DBB6CC 0%, #FFF 100%)"
       />
       <Box
         position="absolute"
@@ -47,7 +47,7 @@ function YellowCircleBackground() {
         height="464px"
         borderRadius="50%"
         mixBlendMode="multiply"
-        background="radial-gradient(45.49% 45.49% at 50% 50%, #FDC964 0%, #FFF 100%)"
+        background="radial-gradient(45.49% 45.49% at 50% 50%, #CEA7E0 0%, #FFF 100%)"
       />
       <Box
         position="absolute"
@@ -57,7 +57,7 @@ function YellowCircleBackground() {
         height="590px"
         borderRadius="50%"
         mixBlendMode="multiply"
-        background="radial-gradient(45.49% 45.49% at 50% 50%, #72BAFF80 0%, #FFF 100%)"
+        background="radial-gradient(45.49% 45.49% at 50% 50%, pink 0%, #FFF 100%)"
       />
     </Box>
   );
@@ -114,10 +114,11 @@ function ContactForm() {
                   <Box m={8} color="#0B0E3F">
                     <VStack spacing={5} as="form" onSubmit={handleSubmit}>
                       <Heading
-                        color="black"
                         fontSize="50px"
                         fontWeight="bold"
                         pb="15px"
+                        bgGradient="linear(to-r, purple.400, pink.400)"
+                        bgClip="text"
                       >
                         Let&apos;s connect!
                       </Heading>
@@ -132,7 +133,7 @@ function ContactForm() {
                         <InputGroup borderColor="#838383">
                           <InputLeftElement pointerEvents="none" />
                           <Input
-                            backgroundColor="#EAEAEA"
+                            backgroundColor="#FFFCF7"
                             color="#7F7F7F"
                             type="text"
                             size="md"
@@ -157,7 +158,7 @@ function ContactForm() {
                         <InputGroup borderColor="#838383">
                           <InputLeftElement pointerEvents="none" />
                           <Input
-                            backgroundColor="#EAEAEA"
+                            backgroundColor="#FFFCF7"
                             color="#7F7F7F"
                             type="email"
                             size="md"
@@ -183,7 +184,7 @@ function ContactForm() {
                       >
                         <Textarea
                           borderColor="#838383"
-                          backgroundColor="#EAEAEA"
+                          backgroundColor="#FFFCF7"
                           placeholder="How can we assist you? *"
                           p="25px 0px 0px 40px"
                           fontWeight="bold"
@@ -207,8 +208,8 @@ function ContactForm() {
                         <Button
                           type="submit"
                           variant="solid"
-                          bg="#FFF177"
-                          color="black"
+                          bg="#AD8DD3"
+                          color="white"
                           borderRadius="10px"
                           p="25px 25px 25px 25px"
                           boxShadow="2px 3px 4.3px 0px rgba(0, 0, 0, 0.25)"
@@ -226,7 +227,7 @@ function ContactForm() {
           </Box>
         </Box>
         <Box m={8}>
-          <Image src={computer} alt="Team Up" />
+          <Image src={connect} alt="Team Up" pr='30px'/>
         </Box>
       </Flex>
     </Container>

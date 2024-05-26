@@ -8,7 +8,7 @@ import Footer from '../components/Footer';
 function LandingPage() {
   return (
     <VStack spacing={0}>
-      <Box height='150vh'>
+      <Box height='100vh'>
         <Intro/>
       </Box>
       <Box mt="20px">
