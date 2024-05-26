@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {APIProvider, Map, AdvancedMarker, Marker, useMap, useMapsLibrary} from '@vis.gl/react-google-maps';
 import duckImage from '../assets/duck.webp';
 import searchIcon from '../assets/searchicon.jpg';
 
 const PlacesNearYou = (props: any) => {
-  const { placeInfo, setPlaceInfo, setNumClinics } = props;
+  const { placeInfo, setPlaceInfo, setNumClinics, onPlaceClick } = props;
   const [ infoAvailable, setInfoAvaliable ] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [ newPlaceInfo, setNewPlaceInfo ] = useState([]);
@@ -23,14 +23,18 @@ const PlacesNearYou = (props: any) => {
       return a.distance - b.distance;
     });
     setNewPlaceInfo(sortedPlaceInfo);
-    console.log("sortedPlaceInfo", sortedPlaceInfo)
     setNumClinics(sortedPlaceInfo.length);
+
 
   }, [infoAvailable, placeInfo])
   return (
     <>
     {newPlaceInfo && newPlaceInfo.map((item, index)=> (
-      <div key={index} className={`flex justify-end cursor-pointer`} onClick={item.onClick}>
+      <div key={index} className={`flex justify-end cursor-pointer`} onClick={ () => {
+        onPlaceClick(item);
+        setIsClicked(true);
+        item.onClick();
+      }}>
         <div className={`m-2 p-3 flex flex-col w-full ${index == placeInfo.length-1 ? 'border-b' : ''}border-b border-gray-300 hover:text-gray-500 active:text-gray-700`} >
           <p className="text-md font-medium">{item.name}</p>
           <p className="font-normal">{item.opening_hours} <span className="text-xs">{'\u25CF'}</span> {item.distance} mi</p>
@@ -73,6 +77,7 @@ const PlaceMarker = (lat: number, lng: number, reactMap: any) => {
   return (
     <AdvancedMarker position={{lat: lat, lng: lng}} onClick={() => {
       zoomToPlace(lat, lng, 16, 500, reactMap);
+      
     }}/>
   )
 }
@@ -161,7 +166,7 @@ const FindNearbyClinics = (props: any) => {
   function getPlaceDetails(placeId: any) {
     var detailsRequest = {
       placeId: placeId,
-      fields: ['name', 'opening_hours', 'geometry', 'adr_address', 'formatted_phone_number','photos','address_component', 'scope'], // Request the name and opening hours fields
+      fields: ['name', 'opening_hours', 'geometry', 'website', 'formatted_phone_number','photos','address_component', 'scope'], // Request the name and opening hours fields
     };
   
     placesService.getDetails(detailsRequest, function (place, status) {
@@ -181,6 +186,9 @@ const FindNearbyClinics = (props: any) => {
           lat,
           lng,
           distance: calculateDistance(lat, lng, lati, long),
+          formatted_phone_number: place.formatted_phone_number,
+          photo: place.photos[0].getUrl(),
+          city: place.address_components[3].long_name.includes("County") ? place.address_components[2].long_name : place.address_components[3].long_name,
         }
         setPlaceInfo((oldPlaceInfo) => [...oldPlaceInfo, sendPlaceInfo]);
       }
@@ -250,12 +258,52 @@ function deg2rad(deg: number) {
 }
 
 function IndividualPlace(props: any) {
-  const { name, opening_hours, distance, setIsClicked } = props;
+  const { place, setIsClicked } = props;
+  const {name, opening_hours, distance, isOpen, photo, city} = place;
   return (
-    <div className="w-full h-full">
-      <p className="text-md font-medium">{name}</p>
-      <p className="font-normal">{opening_hours} <span className="text-xs">{'\u25CF'}</span> {distance} mi</p>
+    <div className="font-inter font-bold grid grid-rows-20 grid-cols-1 border-l-2 border-b-2 rounded-bl-xl rounded-tl-xl border-t-2">
+      <div className="w-96 flex flex-col">
+        <div className="flex flex-row relative">
+          <div>
+            <div className="w-full h-44 bg-cover bg-center bg-no-repeat" style={{backgroundImage: `url(${photo})`}}></div>
+            <div className="p-4 w-full h-full">
+              <p className="text-xl font-bold">{name}</p>
+              <p className="mt-1 mb-1 text-sm font-normal">Birth Control Clinic <span className="text-xs">{'\u25CF'}</span> {city}</p>
+              <div className="pt-2 pb-2 mt-4 mb-4 grid grid-cols-3 gap-0 text-center border-t border-b">
+                <div className="flex flex-col border-r justify-center">
+                  <p className=" text-sm font-bold inline-block">Open</p>
+                  <p className={`inline-block text-sm font-normal ${isOpen ? 'text-green-500' : 'text-red-500'}`}>{isOpen ? 'Yes' : 'No'}</p>
+                </div>
+                <div className="flex flex-col border-r justify-center">
+                  <p className="inline-block text-sm font-bold">Hours</p>
+                  <p className="inline-block text-xs font-normal">{opening_hours}</p>
+                </div>
+                <div className="flex flex-col justify-center">
+                  <p className="inline-block text-sm font-bold ">Distance</p>
+                  <p className="inline-block text-xs font-normal">{distance} mi</p>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+          <div className="absolute w-full flex items-top justify-end z-10">
+            <button
+              className="relative flex items-center text-black justify-center font-bold hover:bg-gray-500 hover:text-white cursor-pointer rounded-full p-1 transition duration-300 ease-in-out outline-none focus:outline-none"
+              onClick={() => { setIsClicked(false) }}
+              style={{ width: '40px', height: '40px' }}
+            >
+              <span className=" hover:opacity-100 transition duration-300 ease-in-out font-inter">X</span>
+            </button>
+          </div>
+          
+        </div>
+
+      </div>
+
+      
     </div>
+
   )
 
 }
@@ -263,15 +311,27 @@ function IndividualPlace(props: any) {
 // given location find birth control places nearby and find them in a radius
 function Maps () {
   const [placeInfo, setPlaceInfo] = useState([]);
-  const lat = 34.052235; // 33.684566  34.052235 LA
-  const lng = -118.243683; // -117.826508 -118.243683
+  // const lat = 34.052235; // 33.684566  34.052235 LA
+  // const lng = -118.243683; // -117.826508 -118.243683
+  const lat = 33.684566; // Irvine
+  const lng = -117.826508;
   const [numClinics, setNumClinics] = useState(null);
   const [isClicked, setIsClicked] = useState(false);
-  const handleToggle = () => {
+  const [individualPlace, setIndividualPlace] = useState(null);
+  const handleToggle = (place) => {
     setIsClicked(!isClicked);
+    setIndividualPlace(place);
   };
-  // const lat = 33.684566; // Irvine
-  // const lng = -117.826508;
+
+  const [divWidth, setDivWidth] = useState(0);
+  const divRef = useRef(null);
+
+  useEffect(() => {
+    // Get the initial width of the div
+    if (divRef.current) {
+      setDivWidth(divRef.current.offsetWidth);
+    }
+  }, []);
   return (
     <>
     <div className="flex justify-left items-center w-full h-screen">
@@ -281,7 +341,7 @@ function Maps () {
             <div className="w-full h-full flex jusitfy-end pl-24 box-border">
               <div className="font-inter font-bold grid grid-rows-20 grid-cols-1">
                 {!isClicked ? (
-                <div className="font-inter font-bold grid grid-rows-20 grid-cols-1 border-l-2 border-b-2 rounded-bl-xl rounded-tl-xl border-t-2">
+                <div ref={divRef} className="font-inter font-bold grid grid-rows-20 grid-cols-1 border-l-2 border-b-2 rounded-bl-xl rounded-tl-xl border-t-2">
                   <div className="m-2 mt-4 p-3 sticky top-0 z-10 bg-white h-17 flex flex-row items-left block text-2xl" style={{ boxShadow: '0 20px 30px -10px rgba(255, 255, 255, 1)'}}>
                     <img src={searchIcon} className="m-4 w-8 h-8 flex items-center items-center"></img>
                     <div>
@@ -289,9 +349,9 @@ function Maps () {
                       <p className="text-base text-gray-400 font-light">{numClinics ? `${numClinics} nearby`: ''}</p>
                     </div>
                   </div>
-                  <PlacesNearYou placeInfo={placeInfo} setPlaceInfo={setPlaceInfo} setNumClinics={setNumClinics} lat={lat} lng={lng}/>
+                  <PlacesNearYou placeInfo={placeInfo} setPlaceInfo={setPlaceInfo} setNumClinics={setNumClinics} lat={lat} lng={lng} onPlaceClick={handleToggle}/>
                 </div>) : (
-                  <div></div>
+                  individualPlace && <IndividualPlace place={individualPlace} divWidth={divWidth} setIsClicked={setIsClicked} />
                 )
                 }
               </div>
