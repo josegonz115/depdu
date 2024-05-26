@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {APIProvider, Map, AdvancedMarker, Marker, useMap, useMapsLibrary} from '@vis.gl/react-google-maps';
 import duckImage from '../assets/duck.webp';
+import searchIcon from '../assets/searchicon.jpg';
 
 const PlacesNearYou = (props: any) => {
   const { placeInfo, setPlaceInfo, setNumClinics } = props;
@@ -264,9 +265,12 @@ function Maps () {
               <div className="font-inter font-bold grid grid-rows-20 grid-cols-1">
 
                 <div className="font-inter font-bold grid grid-rows-20 grid-cols-1 border-l-2 border-b-2 rounded-bl-xl rounded-tl-xl border-t-2">
-                  <div className="m-2 mt-4 mb-4 p-3 sticky top-0 z-10 bg-white h-16 flex flex-col items-left block text-2xl" style={{ boxShadow: '0 20px 30px -10px rgba(255, 255, 255, 1)'}}>
-                    <p className="underline">Clinics Near You</p>
-                    <p>{numClinics ? numClinics: ''}</p>
+                  <div className="m-2 mt-4 mb-4 p-3 sticky top-0 z-10 bg-white h-17 flex flex-row items-left block text-2xl" style={{ boxShadow: '0 20px 30px -10px rgba(255, 255, 255, 1)'}}>
+                    <img src={searchIcon} className="m-4 w-8 h-8 flex items-center items-center"></img>
+                    <div>
+                      <p className="underline">Clinics Near You</p>
+                      <p className="text-base text-gray-400 font-light">{numClinics ? `${numClinics} nearby`: ''}</p>
+                    </div>
                   </div>
                   <PlacesNearYou placeInfo={placeInfo} setPlaceInfo={setPlaceInfo} setNumClinics={setNumClinics} lat={lat} lng={lng}/>
                 </div>
