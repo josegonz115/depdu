@@ -3,27 +3,33 @@ import {APIProvider, Map, AdvancedMarker, Marker, useMap, useMapsLibrary} from '
 import duckImage from '../assets/duck.webp';
 
 const PlacesNearYou = (props: any) => {
-  const { placeInfo } = props;
-  const [ infoAvaliable, setInfoAvaliable ] = useState(false);
+  const { placeInfo, setPlaceInfo, setNumClinics } = props;
+  const [ infoAvailable, setInfoAvaliable ] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
 
-  const handleMouseDown = () => {
-    setIsClicked(true);
-  };
-
-  const handleMouseUp = () => {
-    setIsClicked(false);
-  };
   useEffect(()=> {
-    if (!placeInfo) return;
+    if (!placeInfo || (infoAvailable && placeInfo)) return;
     setInfoAvaliable(true);
-  }, [placeInfo])
+  }, [placeInfo, infoAvailable]);
+
+  useEffect(() => {
+    if (!infoAvailable) return;
+    const sortedPlaceInfo = [...placeInfo].sort((a, b) => {
+      if (a.distance === b.distance) {
+        return b.isOpen - a.isOpen;
+      }
+      return a.distance - b.distance;
+    });
+    setPlaceInfo(sortedPlaceInfo);
+    setNumClinics(sortedPlaceInfo.length);
+
+  }, [infoAvailable, , placeInfo, setPlaceInfo, setNumClinics])
   return (
     <>
-    {infoAvaliable && placeInfo.map((item, index)=> (
+    {placeInfo && placeInfo.map((item, index)=> (
       <div key={index} className={`flex justify-end cursor-pointer`} onClick={item.onClick}>
-        <div className={`m-2 p-3 flex flex-col w-full border-b border-gray-300 hover:text-gray-500 active:text-gray-700 `} >
-          <p className="text-lg font-medium">{item.name}</p>
+        <div className={`m-2 p-3 flex flex-col w-full ${index == placeInfo.length-1 ? 'border-b' : ''}border-b border-gray-300 hover:text-gray-500 active:text-gray-700`} >
+          <p className="text-md font-medium">{item.name}</p>
           <p className="font-normal">{item.opening_hours} <span className="text-xs">{'\u25CF'}</span> {item.distance} mi</p>
           <p className="font-normal"></p>
 
@@ -121,8 +127,7 @@ const FindNearbyClinics = (props: any) => {
       if (status === placesLibrary.PlacesServiceStatus.OK) {
         let newListOfPlaceIds = [];
         let newListOfMarkers = []
-        const firstEightRes = results.slice(0,8);
-        firstEightRes.forEach(function(place) { // Set markers for each place found
+        results.forEach(function(place) { // Set markers for each place found
           const location = place.geometry.location;
           const lat = location.lat();
           const lng = location.lng();
@@ -131,6 +136,7 @@ const FindNearbyClinics = (props: any) => {
           newListOfPlaceIds.push(resultPlaceId);
           newListOfMarkers.push(marker);
         });
+
         setPlaceId((prevId) => [...prevId, ...newListOfPlaceIds]);
         setMarkers((prevMarkers) => [...prevMarkers, ...newListOfMarkers]);
 
@@ -139,7 +145,6 @@ const FindNearbyClinics = (props: any) => {
   }, [placesService])
 
   useEffect(() => {
-    console.log("placeid:", placeId, "placesservice", placesService)
     if (!placeId || !placesService) return
     placeId.forEach((obj) => {
       getPlaceDetails(obj)
@@ -156,10 +161,6 @@ const FindNearbyClinics = (props: any) => {
   
     placesService.getDetails(detailsRequest, function (place, status) {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        // console.log('Place details:', place);
-        // console.log('Opening hours:', place.opening_hours.weekday_text);
-        // console.log('Opening hours:', place.opening_hours.open_now)
-        console.log("place", place);
         const location = place.geometry.location;
         const lat = location.lat();
         const lng = location.lng();
@@ -236,7 +237,6 @@ function calculateDistance(lat1: number, lng1: number, lat2: number, lng2: numbe
     Math.sin(dLng / 2) * Math.sin(dLng / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c; // Distance in miles
-  console.log("distance: ", distance);
   return Number(distance.toFixed(1));
 }
 function deg2rad(deg: number) {
@@ -248,23 +248,34 @@ function Maps () {
   const [placeInfo, setPlaceInfo] = useState([]);
   const lat = 34.052235; // 33.684566  34.052235 LA
   const lng = -118.243683; // -117.826508 -118.243683
-
+  const [numClinics, setNumClinics] = useState(null);
+  useEffect(() => {
+    if (!numClinics) return;
+    console.log("numclinics", numClinics);
+  }, [setNumClinics])
   // const lat = 33.684566; // Irvine
   // const lng = -117.826508;
   return (
     <>
-    <div className="flex debug justify-left items-center w-full h-screen">
+    <div className="flex justify-left items-center w-full h-screen">
       <div className="flex justify-center items-center h-screen"> {/* container */}
         <div className="p-8 grid grid-cols-2 h-full"> {/* grid that holds places and map */}
-          <div className="debug overflow-y-scroll h-full md:col-span-1"> {/* recommending places near you */}
-            <p className="m-2 flex justify-end block">Places Near You</p>
+          <div className="overflow-y-scroll h-full md:col-span-1"> {/* recommending places near you */}
+            <div className="w-full h-full flex jusitfy-end pl-24 box-border">
+              <div className="font-inter font-bold grid grid-rows-20 grid-cols-1">
 
-            <div className="mt-8 font-inter font-bold grid grid-rows-5 grid-cols-1 ">
-              <PlacesNearYou placeInfo={placeInfo} lat={lat} lng={lng}/>
+                <div className="font-inter font-bold grid grid-rows-20 grid-cols-1 border-l-2 border-b-2 rounded-bl-xl rounded-tl-xl border-t-2">
+                  <div className="m-2 mt-4 mb-4 p-3 sticky top-0 z-10 bg-white h-16 flex flex-col items-left block text-2xl" style={{ boxShadow: '0 20px 30px -10px rgba(255, 255, 255, 1)'}}>
+                    <p className="underline">Clinics Near You</p>
+                    <p>{numClinics ? numClinics: ''}</p>
+                  </div>
+                  <PlacesNearYou placeInfo={placeInfo} setPlaceInfo={setPlaceInfo} setNumClinics={setNumClinics} lat={lat} lng={lng}/>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="debug h-full"> {/* map */}
-            <ReactMap placeInfo={placeInfo} setPlaceInfo={setPlaceInfo} lat={lat} lng={lng}/>
+          <div className=""> {/* map */}
+            <ReactMap className="w-full h-full" placeInfo={placeInfo} setPlaceInfo={setPlaceInfo} lat={lat} lng={lng}/>
           </div>
         </div>
       </div>
