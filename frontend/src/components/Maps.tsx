@@ -345,7 +345,7 @@ function Maps () {
             <div className="w-full h-full flex jusitfy-end pl-24 box-border">
               <div className="font-inter font-bold grid grid-rows-20 grid-cols-1">
                 {!isClicked ? (
-                <div className="font-inter font-bold grid grid-rows-20 grid-cols-1 border-l-2 border-b-2 rounded-bl-xl rounded-tl-xl border-t-2">
+                <div className="font-inter font-bold grid grid-rows-20 grid-cols-1 border-l-2 ">
                   <div className="m-2 mt-4 p-3 sticky top-0 z-10 bg-white h-17 flex flex-row items-left block text-2xl" style={{ boxShadow: '0 20px 30px -10px rgba(255, 255, 255, 1)'}}>
                     <img src={searchIcon} className="m-4 w-8 h-8 flex items-center items-center"></img>
                     <div>
