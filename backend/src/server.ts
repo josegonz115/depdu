@@ -1,9 +1,6 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-// import authRoutes from "./routes/auth.routes";
-import testRouter from "./routes/test.routes.js";
-import createTestRouter from "./routes/test.routes.js";
 import aiRoutes from "./routes/ai.routes.js";
 import errorMiddleware from "./middleware/errorMiddleware.js";
 import { Server } from "socket.io";
@@ -69,8 +66,6 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// app.use("/api/auth", authRoutes);
-app.use("/api/test", testRouter);
 app.use("/api/ai", aiRoutes);
 app.use(errorMiddleware);
 
