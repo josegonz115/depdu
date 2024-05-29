@@ -10,7 +10,8 @@
   "devDependencies": {},
   "scripts": {
     "build": "npm i && cd backend && npm i && tsc && cd ../frontend && npm i && npm run build",
-    "start": "node backend/src/server.js"
+    "start": "node backend/src/server.js",
+    "dev": "tsx watch backend/src/server.ts"
   },
   "keywords": [],
   "author": "",

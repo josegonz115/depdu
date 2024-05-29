@@ -35,13 +35,14 @@ const io = new Server(httpServer, {
     },
 });
 
-// socket server 
-const socket = httpServer.listen(socketPort, () => {
-    console.log(`socket listening on port ${socketPort}`);
-});
+// // socket server 
+// httpServer.listen(socketPort, () => {
+//     console.log(`socket listening on port ${socketPort}`);
+// });
 
 io.on("connection", async(socket) => {
     console.log("user connected");
+    console.log(`socket listening on ${port}`);
 
     socket.on("page loaded", async() => {
         const stream = await startResponse();
@@ -59,8 +60,6 @@ io.on("connection", async(socket) => {
         }
         socket.emit("chatbox end");
     });
-
-
 
     socket.on("disconnect", function () {
         console.log("user disconnected");
@@ -95,6 +94,6 @@ if (process.env.NODE_ENV === 'any'){
 
 
 
-const server = app.listen(port, () => {
+httpServer.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });
