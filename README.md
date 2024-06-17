@@ -28,6 +28,11 @@ Interactive Q&A: Answer a series of questions to help depdu understand your need
 
 Google Maps Integration: Find the nearest birth control clinics and Planned Parenthood locations.
 
+## Video
+
+[![Watch the video](https://img.youtube.com/vi/OYj-gNLPDUE/0.jpg)](https://www.youtube.com/watch?v=OYj-gNLPDUE)
+
+
 ## Authors
 Valerie Huynh
 
